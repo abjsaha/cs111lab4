@@ -763,7 +763,7 @@ int main(int argc, char *argv[])
 		if ((t = start_download(tracker_task, argv[1])))
 			task_download(t, tracker_task);*/
 	int count=0;
-	for(;argc>1;argc--;argv++)
+	for(;argc>1;argc--,argv++)
 	{
 		if((t=start_download(tracker_task,argv[1])))
 		{
