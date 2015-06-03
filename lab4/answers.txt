@@ -13,9 +13,9 @@
 # information you'd like us to know, please add it at the end of the file.
 
 # Partner 1
-Name: 
-Student ID: 
-Email: 
+Name: Abhijoy Saha
+Student ID: 004252758
+Email: abhijoysaha25@gmail.com
 
 # Partner 2 (if you're working in a team)
 Name: 

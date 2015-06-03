@@ -759,13 +759,59 @@ int main(int argc, char *argv[])
 	register_files(tracker_task, myalias);
 
 	// First, download files named on command line.
-	for (; argc > 1; argc--, argv++)
+	/*for (; argc > 1; argc--, argv++)
 		if ((t = start_download(tracker_task, argv[1])))
-			task_download(t, tracker_task);
-
+			task_download(t, tracker_task);*/
+	int count=0;
+	for(;argc>1;argc--;argv++)
+	{
+		if((t=start_download(tracker_task,argv[1])))
+		{
+			pid_t pid;
+			if((pid=fork())<0)
+			{
+				error("forking error.");
+				exit(0);
+			}
+			if(pid==0)
+			{
+				task_download(t,tracker_task);
+				exit(0);
+			}
+			else
+			{
+				count++;
+				task_free(t);
+			}
+		}
+	}
+	while(count>0)
+	{
+		waitpid(-1,NULL,0);
+		count--;
+	}
 	// Then accept connections from other peers and upload files to them!
-	while ((t = task_listen(listen_task)))
-		task_upload(t);
+	/*while ((t = task_listen(listen_task)))
+		task_upload(t);*/
+	while((t=task_listen(listen_task)))
+	{
+		pid_t pid;
+		waitpid(-1,NULL,WNOHANG);
+		if((pid=fork())<0)
+		{
+			error("forking error.");
+			exit(0);
+		}
+		if(pid==0)
+		{
+			task_upload(t);
+			exit(0);
+		}
+		else
+		{
+			task_free(t);
+		}
+	}
 
 	return 0;
 }
