@@ -22,7 +22,7 @@
 #include <limits.h>
 #include "md5.h"
 #include "osp2p.h"
-
+#include <sys/wait.h>
 int evil_mode;			// nonzero iff this peer should behave badly
 
 static struct in_addr listen_addr;	// Define listening endpoint
@@ -786,18 +786,19 @@ int main(int argc, char *argv[])
 				task_download(t,tracker_task);
 				exit(0);
 			}
-			/*else
+			else
 			{
 				count++;
 				task_free(t);
-			}*/
+			}
 		}
 	}
-	/*while(count>0)
+	//Exercise 1: wait for all download tasks to finish
+	while(count>0)
 	{
-		//waitpid(-1,NULL,0);
+		waitpid(-1,NULL,0);
 		count--;
-	}*/
+	}
 	// Then accept connections from other peers and upload files to them!
 	/*while ((t = task_listen(listen_task)))
 		task_upload(t);*/
@@ -805,7 +806,7 @@ int main(int argc, char *argv[])
 	{
 		//Excercise 1: forked upload task to run in parallel
 		pid_t pid;
-		//waitpid(-1,NULL,WNOHANG);
+		waitpid(-1,NULL,WNOHANG);
 		if((pid=fork())<0)
 		{
 			error("forking error.");
@@ -818,7 +819,7 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			//task_free(t);
+			task_free(t);
 		}
 	}
 
