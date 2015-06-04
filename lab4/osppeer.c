@@ -37,7 +37,7 @@ static int listen_port;
 
 #define TASKBUFSIZ	8249	// Size of task_t::buf
 #define FILENAMESIZ	256	// Size of task_t::filename
-#define MAXFILESIZ 50000
+#define MAXFILESIZ 1000000
 
 typedef enum tasktype {		// Which type of connection is this?
 	TASK_TRACKER,		// => Tracker connection

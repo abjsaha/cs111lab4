@@ -37,7 +37,8 @@ Then we set the last character to the null byte to prevent buffer overrun.
 #    each)
 
 We added a MAXFILESIZ to 45000, which is slightly bigger than cat1.jpg, cat2.jpg and cat3.jpg. Whenever the total_written is greater than equal to MAXFILESIZ, we tell the task to tryagain.
-We changed the TASKBUFSIZ to fix the run-popular bug of "tracker connection closed prematurely!".
+We changed the TASKBUFSIZ to 8249, fix the run-popular bug of "tracker connection closed prematurely!". This is done to allow more connections.
+
 
 # EXERCISE 3: Describe the attacks you implemented for "evil mode".  Why
 #    are they attacks?  (~3-10 sentences each)
