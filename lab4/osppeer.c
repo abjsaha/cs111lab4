@@ -662,6 +662,28 @@ static void task_upload(task_t *t)
 	}
 	t->head = t->tail = 0;
 
+	// Exercise 2B: check that the files being served are inside the current directory
+	char requested_dir[PATH_MAX];
+	char current_dir[PATH_MAX];
+
+	if (!getcwd(current_dir, PATH_MAX))
+	{
+		error("* Invalid current path");
+		goto exit;
+	}
+
+	if (!realpath(t->filename, requested_dir))
+	{
+		error("* Invalid requested path");
+		goto exit;
+	}
+
+	if (!strncmp(current_dir, requested_dir, strlen(work_dir)))
+	{
+		error("* Peer cannot serve files outside the current directory");
+		goto exit;
+	}
+
 	t->disk_fd = open(t->filename, O_RDONLY);
 	if (t->disk_fd == -1) {
 		error("* Cannot open file %s", t->filename);
