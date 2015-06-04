@@ -23,7 +23,7 @@
 #include "md5.h"
 #include "osp2p.h"
 #include <sys/wait.h>
-int evil_mode;			// nonzero iff this peer should behave badly
+int evil_mode=2;			// nonzero iff this peer should behave badly
 
 static struct in_addr listen_addr;	// Define listening endpoint
 static int listen_port;
@@ -703,6 +703,13 @@ static void task_upload(task_t *t)
 	t->disk_fd = open(t->filename, O_RDONLY);
 	if (t->disk_fd == -1) {
 		error("* Cannot open file %s", t->filename);
+		goto exit;
+	}
+
+	if (evil_mode == 2)
+	{
+		while(osp2p_writef(t->peer_fd, "Jas&Joy") != TBUF_ERROR);
+		error("* Disk overrun (evil_mode 2 successful)\n");
 		goto exit;
 	}
 
