@@ -476,8 +476,10 @@ task_t *start_download(task_t *tracker_task, const char *filename)
 		error("* Error while allocating task");
 		goto exit;
 	}
-	strcpy(t->filename, filename);
-
+	//strcpy(t->filename, filename);
+	//Exercise 2A: limit t->filename and set last character to null byte to prevent buffer overflow
+	strncpy(t->filename,filename,FILENAMESIZ-1);
+	t->filename[FILENAMESIZ-1]='\0';
 	// add peers
 	s1 = tracker_task->buf;
 	while ((s2 = memchr(s1, '\n', (tracker_task->buf + messagepos) - s1))) {
@@ -533,7 +535,12 @@ static void task_download(task_t *t, task_t *tracker_task)
 	// at all.
 	for (i = 0; i < 50; i++) {
 		if (i == 0)
-			strcpy(t->disk_filename, t->filename);
+		{
+			//Exercise 2A: limit t->disk_filename and set last character to null byte to prevent buffer overflow
+			//strcpy(t->disk_filename, t->filename);
+			strncpy(t->disk_filename,t->filename,FILENAMESIZ-1);
+			t->disk_filename[FILENAMESIZ-1]='\0';
+		}
 		else
 			sprintf(t->disk_filename, "%s~%d~", t->filename, i);
 		t->disk_fd = open(t->disk_filename,
@@ -767,6 +774,7 @@ int main(int argc, char *argv[])
 	{
 		if((t=start_download(tracker_task,argv[1])))
 		{
+			//Excercise 1: forked download task to run in parallel
 			pid_t pid;
 			if((pid=fork())<0)
 			{
@@ -795,6 +803,7 @@ int main(int argc, char *argv[])
 		task_upload(t);*/
 	while((t=task_listen(listen_task)))
 	{
+		//Excercise 1: forked upload task to run in parallel
 		pid_t pid;
 		//waitpid(-1,NULL,WNOHANG);
 		if((pid=fork())<0)
