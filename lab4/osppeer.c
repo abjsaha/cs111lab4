@@ -37,6 +37,7 @@ static int listen_port;
 
 #define TASKBUFSIZ	8249	// Size of task_t::buf
 #define FILENAMESIZ	256	// Size of task_t::filename
+#define MAXFILESIZ 50000
 
 typedef enum tasktype {		// Which type of connection is this?
 	TASK_TRACKER,		// => Tracker connection
@@ -197,7 +198,6 @@ taskbufresult_t write_from_taskbuf(int fd, task_t *t)
 		amt = write(fd, &t->buf[headpos], tailpos - headpos);
 	else
 		amt = write(fd, &t->buf[headpos], TASKBUFSIZ - headpos);
-
 	if (amt == -1 && (errno == EINTR || errno == EAGAIN
 			  || errno == EWOULDBLOCK))
 		return TBUF_AGAIN;
@@ -563,6 +563,12 @@ static void task_download(task_t *t, task_t *tracker_task)
 	// Read the file into the task buffer from the peer,
 	// and write it from the task buffer onto disk.
 	while (1) {
+		//Exercise 2B: Check if file being written is larger than the set MAXFILESIZ and redo if true
+		if(t->total_written>=MAXFILESIZ)
+		{
+			error("File too big.");
+			goto try_again;
+		}
 		int ret = read_to_taskbuf(t->peer_fd, t);
 		if (ret == TBUF_ERROR) {
 			error("* Peer read error");
