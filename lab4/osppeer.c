@@ -678,7 +678,7 @@ static void task_upload(task_t *t)
 		goto exit;
 	}
 
-	if (!strncmp(current_dir, requested_dir, strlen(work_dir)))
+	if (!strncmp(current_dir, requested_dir, strlen(current_dir)))
 	{
 		error("* Peer cannot serve files outside the current directory");
 		goto exit;
