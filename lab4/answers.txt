@@ -18,9 +18,9 @@ Student ID: 004252758
 Email: abhijoysaha25@gmail.com
 
 # Partner 2 (if you're working in a team)
-Name: 
-Student ID: 
-Email: 
+Name: Jasmine Mok
+Student ID: 604283974
+Email: jasminemok@ucla.edu
 
 # EXERCISE 1: What method you used to make your peer download and upload
 #    files in parallel?  (~1-3 sentences)
