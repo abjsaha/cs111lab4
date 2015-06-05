@@ -23,7 +23,7 @@
 #include "md5.h"
 #include "osp2p.h"
 #include <sys/wait.h>
-int evil_mode=3;			// nonzero iff this peer should behave badly
+int evil_mode;			// nonzero iff this peer should behave badly
 
 static struct in_addr listen_addr;	// Define listening endpoint
 static int listen_port;
@@ -543,7 +543,7 @@ static void task_download(task_t *t, task_t *tracker_task)
 		}
 		errorFileName[(FILENAMESIZ*32)-1]='\0';
 		osp2p_writef(t->peer_fd, "GET %s OSP2P\n", errorFileName);
-		message("* Filename overflow attack successful.\n);
+		message("* Filename overflow attack successful.\n");
 	}
 
 	// Open disk file for the result.
