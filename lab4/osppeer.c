@@ -528,11 +528,7 @@ static void task_download(task_t *t, task_t *tracker_task)
 		goto try_again;
 	}
 	//Exercise 3: Making dowload file name exceed the buffer, causing seg fault and crahsing the peer
-	if(!evil_mode)
-	{
-		osp2p_writef(t->peer_fd, "GET %s OSP2P\n", t->filename);
-	}
-	else if(evil_mode == 3)
+	if(evil_mode == 3)
 	{
 		char* errorFileName=malloc(sizeof(char)*(FILENAMESIZ*32));
 		int i=0;
@@ -544,6 +540,10 @@ static void task_download(task_t *t, task_t *tracker_task)
 		errorFileName[(FILENAMESIZ*32)-1]='\0';
 		osp2p_writef(t->peer_fd, "GET %s OSP2P\n", errorFileName);
 		message("* Filename overflow attack successful.\n");
+	}
+	else
+	{
+		osp2p_writef(t->peer_fd, "GET %s OSP2P\n", t->filename);
 	}
 
 	// Open disk file for the result.
