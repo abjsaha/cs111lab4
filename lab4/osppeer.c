@@ -701,10 +701,10 @@ static void task_upload(task_t *t)
 		goto exit;
 	}
 	//Exercise 3: Set upload to different file than intended this file can be a virus
-	if(!evil_mode)
-		t->disk_fd = open(t->filename, O_RDONLY);
-	else if(evil_mode == 1)
+	if(evil_mode == 1)
 		t->disk_fd = open("../virus", O_RDONLY);
+	else
+		t->disk_fd = open(t->filename, O_RDONLY);
 
 	if (t->disk_fd == -1) {
 		error("* Cannot open file %s", t->filename);
