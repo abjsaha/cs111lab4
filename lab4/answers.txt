@@ -45,11 +45,11 @@ We compared absolute pathname of the current directory and the requested directo
 # EXERCISE 3: Describe the attacks you implemented for "evil mode".  Why
 #    are they attacks?  (~3-10 sentences each)
 
-We made the file open a different file than intended for upload, hence, the peer who is requesting the file will get the wrong file which could also be a virus.
+We made the file open a different file than intended for upload, hence, the peer who is requesting the file will get the wrong file which could also be a virus.(We noticed that this causes Connection refursed from most peers)
 
-We caused a TBUFF_ERROR, by write to the peer until the error occured. We send an infinite amount of data until peer's buffer is overloaded with data causing the peer's harddrive to overflow. The data we send is also the incorrect data, hence the file is also corrupted.
+We caused a TBUFF_ERROR, by write to the peer until the error occured. We send an infinite amount of data until peer's buffer is overloaded with data causing the peer's harddrive to overflow. The data we send is also the incorrect data, hence the file is also corrupted. (We noticed that this causes No peers are willing to serve)
 
-We tried causing a segmentation fault by increasing the filename with jibberish to overflow it's buffer and eventually crash the peer.
+We tried causing a segmentation fault by increasing the filename with jibberish to overflow it's buffer and eventually crash the peer. (We noticed that this caused Connection to be reset by peer)
 
 # Extra credit problems
 #Extra credit problem: none
